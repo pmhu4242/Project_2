@@ -1,5 +1,5 @@
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 600;
 
 var margin = {
     top: 20,
@@ -14,7 +14,7 @@ var height = svgHeight - margin.top - margin.bottom;
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 var svg = d3
-    .select(".stockchart")
+    .select("#stockchart")
     .append("svg")
     .attr("width", svgWidth)
     .attr("height", svgHeight);
@@ -33,7 +33,9 @@ d3.csv("data/Final_Dataset.csv").then(function (stockdata) {
 
     // Format the data
     stockdata.forEach(function (data) {
-        data.Date = parseTime(data.Date);
+        data.Year = +data.Year;
+        data.Month = +data.Month;
+        // data.Date = parseTime(data.Date);
         data.UAL_Close = +data.UAL_Close;
         data.DAL_Close = +data.DAL_Close;
         data.AAL_Close = +data.AAL_Close;
@@ -54,13 +56,11 @@ d3.csv("data/Final_Dataset.csv").then(function (stockdata) {
     //     .domain([0, d3.max(stockdata, d => d.smurf_sightings)])
     //     .range([height, 0]);
 
-
-
     // Create axis functions
     var bottomAxis = d3.axisBottom(xTimeScale)
         .tickFormat(d3.timeFormat("%b-%Y"));
-    // var leftAxis = d3.axisLeft(yLinearScale1);
-    var rightAxis = d3.axisRight(yLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+    // var rightAxis = d3.axisRight(yLinearScale);
 
     // Add x-axis
     chartGroup.append("g")
@@ -71,18 +71,18 @@ d3.csv("data/Final_Dataset.csv").then(function (stockdata) {
     chartGroup.append("g")
         // Define the color of the axis text
         .classed("blue", true)
-        .attr("transform", `translate(${width}, 0)`)
-        .call(rightAxis);
+        // .attr("transform", `translate(${width}, 0)`)
+        .call(leftAxis);
 
-    // Line generators for each line
+    // Line generators for UAL
     var UALline = d3.line()
-        .x(d => xTimeScale(d.Date))
-        .y(d => yLinearScale1(d.UAL_Close));
+        .x(d => xTimeScale(d.Month, d.Year))
+        .y(d => yLinearScale(d.UAL_Close));
 
 
-    // Line generator for morning data
+    // Line generator for DAL
     var DALline = d3.line()
-        .x(d => xTimeScale(d.Date))
+        .x(d => xTimeScale(d.Month, d.Year))
         .y(d => yLinearScale(d.DAL_Close));
 
     // // Line generator for evening data
@@ -93,15 +93,16 @@ d3.csv("data/Final_Dataset.csv").then(function (stockdata) {
     // Append a path for line1
     chartGroup
         .append("path")
-        .attr("d", UALline(stockdata))
+        .data(stockdata)
+        .attr("d", UALline)
         .classed("line green", true);
 
     // Append a path for line2
-    chartGroup
-        .data([stockdata])
-        .append("path")
-        .attr("d", DALline)
-        .classed("line orange", true);
+    // chartGroup
+    //     .data([stockdata])
+    //     .append("path")
+    //     .attr("d", DALline(stockdata))
+    //     .classed("line orange", true);
 
 }).catch(function (error) {
     console.log(error);
