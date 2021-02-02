@@ -24,29 +24,32 @@ var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import data from an external CSV file
-d3.csv("data/Final_Dataset.csv").then(function (stockdata) {
+d3.csv("data/Final_Close_Dataset.csv").then(function (stockdata) {
     console.log(stockdata);
-    console.log([stockdata]);
 
-    // Create a function to parse date and time
-    var parseTime = d3.timeParse("%Y-%b-%d");
 
-    // Format the data
+    // create a function to parse date and time
+    var parseTime = d3.timeParse("%Y-%m-%d");
+    // date = new Date("%b/%d/%Y");
+
+    // format the data
     stockdata.forEach(function (data) {
-        data.Year = +data.Year;
-        data.Month = +data.Month;
-        // data.Date = parseTime(data.Date);
+        // data.Year = +data.Year;
+        // data.Month = +data.Month;
+        data.Date = parseTime(data.Date);
         data.UAL_Close = +data.UAL_Close;
         data.DAL_Close = +data.DAL_Close;
         data.AAL_Close = +data.AAL_Close;
         data.JBLU_Close = +data.JBLU_Close;
         data.LUV_Close = +data.LUV_Close;
         data.SAVE_Close = +data.SAVE_Close;
+        // let temp = parseTime(data.Date);
+        // console.log(temp);
     });
 
     // Create scaling functions
     var xTimeScale = d3.scaleTime()
-        .domain(d3.extent(stockdata, d => d.Month, d => d.Year))
+        .domain(d3.extent(stockdata, d => d.Date))
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
@@ -76,7 +79,7 @@ d3.csv("data/Final_Dataset.csv").then(function (stockdata) {
 
     // Line generators for UAL
     var UALline = d3.line()
-        .x(d => xTimeScale(d.Month, d.Year))
+        .x(d => xTimeScale(d.Date))
         .y(d => yLinearScale(d.UAL_Close));
 
 
