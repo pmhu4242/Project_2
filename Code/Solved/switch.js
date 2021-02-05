@@ -30,38 +30,39 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
 // Load data from hours-of-tv-watched.csv
-d3.csv("tsa_dataframe.csv").then(function(tsaData) {
+d3.csv("marriott_ann_rev_dataframe_r.csv").then(function(marriottAnnRev) {
 
-  console.log(tsaData);
+  console.log(marriottAnnRev);
+});
 
   // Print the tvData
   // console.log(tvData);
 
   // Cast the hours value to a number for each piece of tvData
-  tsaData.forEach(function(data) {
-    data.hours = +data.hours;
-  });
+  // tsaData.forEach(function(data) {
+  //   data.hours = +data.hours;
+  // });
 
-  var barSpacing = 10; // desired space between each bar
-  var scaleY = 10; // 10x scale on rect height
+  // var barSpacing = 10; // desired space between each bar
+  // var scaleY = 10; // 10x scale on rect height
 
   // Create a 'barWidth' variable so that the bar chart spans the entire chartWidth.
-  var barWidth = (chartWidth - (barSpacing * (tsaData.length - 1))) / tData.length;
+//   var barWidth = (chartWidth - (barSpacing * (tsaData.length - 1))) / tData.length;
 
-  // @TODO
-  // Create code to build the bar chart using the tvData.
-  chartGroup.selectAll(".bar")
-    .data(tvData)
-    .enter()
-    .append("rect")
-    .classed("bar", true)
-    .attr("width", d => barWidth)
-    .attr("height", d => d.hours * scaleY)
-    .attr("x", (d, i) => i * (barWidth + barSpacing))
-    .attr("y", d => chartHeight - d.hours * scaleY);
-}).catch(function(error) {
-  console.log(error);
-});
+//   // @TODO
+//   // Create code to build the bar chart using the tvData.
+//   chartGroup.selectAll(".bar")
+//     .data(tvData)
+//     .enter()
+//     .append("rect")
+//     .classed("bar", true)
+//     .attr("width", d => barWidth)
+//     .attr("height", d => d.hours * scaleY)
+//     .attr("x", (d, i) => i * (barWidth + barSpacing))
+//     .attr("y", d => chartHeight - d.hours * scaleY);
+// }).catch(function(error) {
+//   console.log(error);
+// });
 
   
 
