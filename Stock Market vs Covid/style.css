@@ -1,0 +1,18 @@
+body{
+    background-color: rgb(95, 166, 179);
+}
+
+.container{
+    margin: 90px;
+}
+
+.col-lg-12{
+    position: relative;
+    bottom: 0;
+    background-color: lightgray;
+    padding: 1%;
+}
+
+p{
+    padding: .6%;
+}
