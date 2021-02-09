@@ -2,9 +2,9 @@ var svgWidth = 1500;
 var svgHeight = 800;
 
 var margin = {
-  top: 90,
+  top: 20,
   right: 20,
-  bottom: 80,
+  bottom: 100,
   left: 250
 };
 console.log("started")
@@ -23,17 +23,17 @@ var svg = d3
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Initial Params for x
-var chosenXAxis = "Covid_positive";
 // Initial Params for y
-var chosenYAxis = "Total_Covid_Test";
+var chosenYAxis = "Covid_positive";
+// Initial Params for x
+var chosenXAxis = "Total_Covid_Test";
 
 // function used for updating x-scale upon click on axis label
 function xScale(USA, chosenXAxis) {
   // create scales functions for the chart
   var xLinearScale = d3.scaleLinear()
     .domain([d3.min(USA, d => d[chosenXAxis])*.8,
-      d3.max(USA, d => d[chosenXAxis])*1.2 
+      d3.max(USA, d => d[chosenXAxis])*1.05
     ])
     .range([0, width]);
   // console.log(xLinearScale);
@@ -45,7 +45,7 @@ function yScale(USA, chosenYAxis) {
   // create scales function for the chart
   var yLinearScale = d3.scaleLinear()
     .domain([d3.min(USA, d => d[chosenYAxis]) *0.8 ,
-      d3.max(USA, d => d[chosenYAxis]) *1.2
+      d3.max(USA, d => d[chosenYAxis]) *1.1
     ])
     .range([height, 0]);
   return yLinearScale;
@@ -98,22 +98,21 @@ function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
 var xlabel;
-  if (chosenXAxis === "Covid_positive") {
-    var xlabel = "Positive Covid #:";
+  if (chosenXAxis === "Total_Covid_Test") {
+    var xlabel = "Total Covid tested:";
   }
-  
   else {
-    var xlabel = "Positive Antibody #";
+    var xlabel = "Recovered #";
   }
 
-  if (chosenYAxis === "Total_Antibody_Test") {
-    var ylabel = "Total tested Antibody:";
+  if (chosenYAxis === "Covid_positive") {
+    var ylabel = "Positive Covid #:";
   }
-  else if (chosenYAxis === "Total_Covid_Test") {
-    var ylabel = "Total tested Covid:";
+  else if (chosenYAxis === "Hospitalized") {
+    var ylabel = "Hospitalized #:";
   }
   else {
-    var ylabel = "Recovered:";
+    var ylabel = "Death #:";
   }
 
 
@@ -148,7 +147,7 @@ var xlabel;
     });
   return circlesGroup;
 }
-console.log("ghn");
+// console.log("ghn");
 // Retrieve data from the CSV file and execute everything below
 d3.csv("USA_cleaned.csv").then(function(USA, err) {
   // if (err) throw err;
@@ -157,9 +156,9 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
   USA.forEach(function(data) {
     data.Covid_recovered = +data.Covid_recovered;
     data.Total_Covid_Test = +data.Total_Covid_Test;
-    data.Total_Antibody_Test = +data.Total_Antibody_Test;
+    data.Hospitalized = +data.Hospitalized;
     data.Covid_positive = +data.Covid_positive;
-    data.Positive_Antibody = +data.Positive_Antibody;
+    data.Death = +data.Death;
     
   });
   
@@ -197,12 +196,12 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
     .attr("fill", "blue")
     .attr("opacity", ".65");
 
-  // Append Text to Circles
+  // Append Text/state name to Circles
   var textGroup = chartGroup.selectAll("text")
     .data(USA)
     .enter()
     .append("text")
-    .attr("transform", `translate(0,4.5)`)
+    .attr("transform", `translate(0,5)`)
     .attr("x", d => xLinearScale(d[chosenXAxis]))
     .attr("y", d => yLinearScale(d[chosenYAxis]))
     .text(d => (d.state))
@@ -217,45 +216,45 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
   var xlabelsGroup = chartGroup.append("g")
   .attr("transform", `translate(${width/2 }, ${height })`);
 
-  var Covid_positivelabel = xlabelsGroup.append("text")
+  var Covid_recoveredlabel = xlabelsGroup.append("text")
     .attr("x", 0)
-    .attr("y", 40)
-    .attr("value", "Covid_positive") // value to grab for event listener
-    .classed("active", true)
-    .text("Positive COVID test");
-
-  var Positive_Antibodylabel = xlabelsGroup.append("text")
-    .attr("x", 0)
-    .attr("y", 70)
-    .attr("value", "Positive_Antibody") // value to grab for event listener
+    .attr("y", 80)
+    .attr("value", "Covid_recovered") // value to grab for event listener
     .classed("inactive", true)
-    .text("Positive ANTIBODY tested ");
+    .text("Recovered");
+
+  var Total_Covid_Testlabel = xlabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 50)
+    .attr("value", "Total_Covid_Test") // value to grab for event listener
+    .classed("active", true)
+    .text("Total Covid tested ");
 
   
   // Create group for ylabels
   var ylabelsGroup = chartGroup.append("g")
   .attr("transform","rotate(-90)");
 
-  var Covid_testlabel = ylabelsGroup.append("text")
+  var Covid_positivelabel = ylabelsGroup.append("text")
     .attr("y", 0-margin.left +150)
     .attr("x", 0-(height/2))
-    .attr("value", "Total_Covid_Test") // value to grab for event listener
+    .attr("value", "Covid_positive") // value to grab for event listener
     .classed("active", true)
-    .text("Total number Covid tested");
+    .text("Total Covid tested");
 
-  var Antibodylabel = ylabelsGroup.append("text")
+  var Deathlabel = ylabelsGroup.append("text")
     .attr("x", 0-(height/2))
     .attr("y", 0-margin.left +120)
-    .attr("value", "Total_Antibody_Test") // value to grab for event listener
+    .attr("value", "Death") // value to grab for event listener
     .classed("inactive", true)
-    .text("Total # people tested Antibody");
+    .text("Death #");
 
-  var recoveredlabel = ylabelsGroup.append("text")
+  var Hospitalizedlabel = ylabelsGroup.append("text")
     .attr("x", 0-(height/2))
     .attr("y", 0-margin.left +90)
-    .attr("value", "Covid_recovered") // value to grab for event listener
+    .attr("value", "Hospitalized") // value to grab for event listener
     .classed("inactive", true)
-    .text("# Recovered from Covid Test");
+    .text("# Hospitalized");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
@@ -282,19 +281,19 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
         textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)
         
         // changes classes to change bold text
-        if (chosenXAxis === "Covid_positive") {
-          Covid_positivelabel
+        if (chosenXAxis === "Total_Covid_Test") {
+          Total_Covid_Testlabel
             .classed("active", true)
             .classed("inactive", false);
-          Positive_Antibodylabel
+          Covid_recoveredlabel
             .classed("active", false)
             .classed("inactive", true);
         }
         else {
-          Covid_positivelabel
+          Total_Covid_Testlabel
             .classed("active", false)
             .classed("inactive", true);
-          Positive_Antibodylabel
+          Covid_recoveredlabel
             .classed("active", true)
             .classed("inactive", false);
         }
@@ -322,36 +321,36 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
         textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)
 
         // changes classes to change bold text
-        if (chosenYAxis === "Total_Antibody_Test") {
-          Antibodylabel
+        if (chosenYAxis === "Covid_positive") {
+          Covid_positivelabel
             .classed("active", true)
             .classed("inactive", false);
-          recoveredlabel
+          Deathlabel
             .classed("active", false)
             .classed("inactive", true);
-          Covid_testlabel
+          Hospitalizedlabel
             .classed("active", false)
             .classed("inactive", true);
         }
-        else if (chosenYAxis === "Covid_recovered") {
-          recoveredlabel
+        else if (chosenYAxis === "Hospitalized") {
+          Hospitalizedlabel
             .classed("active", true)
             .classed("inactive", false);
-          Covid_testlabel
+          Covid_positivelabel
             .classed("active", false)
             .classed("inactive", true);
-          Antibodylabel
+          Deathlabel
             .classed("active", false)
             .classed("inactive", true);
         }
         else {
-          Antibodylabel
+          Hospitalizedlabel
             .classed("active", false)
             .classed("inactive", true);
-          recoveredlabel
+          Covid_positivelabel
             .classed("active", false)
             .classed("inactive", true);
-          Covid_testlabel
+          Deathlabel
             .classed("active", true)
             .classed("inactive", false);
         }
