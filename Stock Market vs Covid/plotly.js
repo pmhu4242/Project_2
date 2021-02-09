@@ -1,27 +1,5 @@
-// // function for initialization
-// function init() {
-
-//     // read in the csv file
-//     d3.csv("data/Final_Collective_Dataset.csv").then((airlines) => {
-
-//         console.log(airlines)
-//         console.log(airlines)
-
-
-//           // filter metadata by id
-//           var date = meta.filter(airlines => airlines.Date == Date)[0];
-//           console.log(date)
-
-//     });
-
-// };
-
-
-// // call init function 
-// init ();
-
 // read the csv file
-Plotly.d3.csv('data/Final_Collective_Dataset.csv', function (err, rows) {
+Plotly.d3.csv('data/Final_Collective_Dataset.csv', function (rows) {
 
     // create a function to unpack the data in each row
     function unpack(rows, key) {
@@ -182,4 +160,7 @@ Plotly.d3.csv('data/Final_Collective_Dataset.csv', function (err, rows) {
 
     // plot the chart
     Plotly.newPlot('stockchart', data, layout);
+
+}).catch(function (error) {
+    console.log(error);
 });

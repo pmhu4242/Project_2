@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(95, 166, 179);
+    background-color: rgb(123, 208, 248);
 }
 
 .container{
@@ -9,7 +9,7 @@ body{
 .col-lg-12{
     position: relative;
     bottom: 0;
-    background-color: lightgray;
+    background-color: #eaeeec;
     padding: 1%;
 }
 
