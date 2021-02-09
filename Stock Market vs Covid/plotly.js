@@ -161,6 +161,4 @@ Plotly.d3.csv('data/Final_Collective_Dataset.csv', function (rows) {
     // plot the chart
     Plotly.newPlot('stockchart', data, layout);
 
-}).catch(function (error) {
-    console.log(error);
 });
