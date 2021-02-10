@@ -1,4 +1,4 @@
-var svgWidth = 1500;
+var svgWidth = 1600;
 var svgHeight = 800;
 
 var margin = {
@@ -186,7 +186,7 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
   
 
   // append initial circles
-  var circlesGroup = chartGroup.selectAll("circle")
+  var circlesGroup = chartGroup.selectAll("g circles")
     .data(USA)
     .enter()
     .append("circle")
@@ -197,7 +197,7 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
     .attr("opacity", ".65");
 
   // Append Text/state name to Circles
-  var textGroup = chartGroup.selectAll("text")
+  var textGroup = chartGroup.selectAll("g circles")
     .data(USA)
     .enter()
     .append("text")
