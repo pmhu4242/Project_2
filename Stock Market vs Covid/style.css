@@ -2,12 +2,8 @@ body{
     background-color: rgb(123, 208, 248);
 }
 
-.container{
-    margin: 90px;
-}
-
 .col-lg-12{
-    position: relative;
+    position: static;
     bottom: 0;
     background-color: #eaeeec;
     padding: 1%;
