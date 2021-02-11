@@ -240,7 +240,7 @@ d3.csv("USA_cleaned.csv").then(function(USA, err) {
     .attr("x", 0-(height/2))
     .attr("value", "Covid_positive") // value to grab for event listener
     .classed("active", true)
-    .text("Total Covid tested");
+    .text("Covid_positive");
 
   var Deathlabel = ylabelsGroup.append("text")
     .attr("x", 0-(height/2))
