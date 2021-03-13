@@ -1,0 +1,14 @@
+body{
+    background-color: rgb(123, 208, 248);
+}
+
+.col-lg-12{
+    position: static;
+    bottom: 0;
+    background-color: #eaeeec;
+    padding: 1%;
+}
+
+p{
+    padding: .6%;
+}
